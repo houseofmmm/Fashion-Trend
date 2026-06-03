@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TrendPulse 2026 // Fashion Trend & Insights Engine</title>
+  
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Custom Style Sheets -->
+  <link rel="stylesheet" href="style.css">
+  
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+  <div class="app-container">
+    <!-- Glowing background elements -->
+    <div class="bg-glow-1"></div>
+    <div class="bg-glow-2"></div>
+
+    <!-- 1. SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <div class="logo-icon"></div>
+        <h1>TRENDPULSE</h1>
+      </div>
+      
+      <ul class="sidebar-menu">
+        <li class="menu-item active" data-tab="dashboard">
+          <i class="fa-solid fa-chart-line"></i>
+          <span>종합 대시보드</span>
+        </li>
+        <li class="menu-item" data-tab="platforms">
+          <i class="fa-solid fa-cube"></i>
+          <span>플랫폼별 분석</span>
+        </li>
+        <li class="menu-item" data-tab="matrix">
+          <i class="fa-solid fa-sliders"></i>
+          <span>글로벌 vs 한국</span>
+        </li>
+        <li class="menu-item" data-tab="live">
+          <i class="fa-solid fa-rss"></i>
+          <span>실시간 패션 피드</span>
+        </li>
+        <li class="menu-item" data-tab="forecast">
+          <i class="fa-solid fa-wand-magic-sparkles"></i>
+          <span>트렌드 시뮬레이터</span>
+        </li>
+      </ul>
+      
+      <div class="sidebar-footer">
+        <div class="status-indicator">
+          <div class="pulse-dot"></div>
+          <span>실시간 수집기 대기중</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- 2. MAIN CONTENT -->
+    <main class="main-content">
+      
+      <!-- Top Sticky Header -->
+      <header class="main-header">
+        <div class="header-title">
+          <h2 id="page-title-display">종합 대시보드</h2>
+          <p id="page-desc-display">인스타그램, 유튜브, 넷플릭스 등 멀티 소셜 채널의 트렌드 지표 통합 요약</p>
+        </div>
+        
+        <div class="header-meta">
+          <div class="meta-badge">
+            업데이트: <span id="last-update-time">2026-06-03</span>
+          </div>
+          <div class="meta-badge">
+            감성 지표: <strong id="overall-sentiment-display">긍정적</strong>
+          </div>
+        </div>
+      </header>
+
+      <!-- Content Container -->
+      <div class="content-body">
+        
+        <!-- ==========================================
+             TAB 1: DASHBOARD
+             ========================================== -->
+        <section id="tab-dashboard" class="tab-pane active">
+          <!-- Metric Tiles -->
+          <div class="metrics-grid">
+            <div class="glass-card metric-card m-pink">
+              <span class="metric-label">최고 글로벌 지표</span>
+              <div class="metric-val" id="top-global-score">94%</div>
+              <div class="metric-desc" id="top-global-name">정제된 맥시멀리즘</div>
+            </div>
+            
+            <div class="glass-card metric-card m-cyan">
+              <span class="metric-label">최고 한국 모멘텀</span>
+              <div class="metric-val" id="top-korea-score">97%</div>
+              <div class="metric-desc" id="top-korea-name">K-Pop 리퀴드 크롬</div>
+            </div>
+            
+            <div class="glass-card metric-card m-violet">
+              <span class="metric-label">글로벌 vs 한국 격차</span>
+              <div class="metric-val">-5%</div>
+              <div class="metric-desc"><span class="up">한국 트렌드 9% 급상승</span></div>
+            </div>
+            
+            <div class="glass-card metric-card m-gold">
+              <span class="metric-label">주요 바이럴 채널</span>
+              <div class="metric-val" id="top-platform-name">Instagram</div>
+              <div class="metric-desc"><span class="stable">#KFashion 언급량 급증</span></div>
+            </div>
+          </div>
+
+          <!-- Charts and Word Cloud Grid -->
+          <div class="dashboard-grid">
+            <div class="glass-card">
+              <h3 class="highlight-section-title">
+                <i class="fa-solid fa-chart-area"></i> 2026 상반기 트렌드 지수 추이
+              </h3>
+              <div class="chart-container">
+                <canvas id="trendChart"></canvas>
+              </div>
+            </div>
+            
+            <div class="glass-card cloud-card">
+              <h3 class="highlight-section-title">
+                <i class="fa-solid fa-cloud"></i> 핫 키워드 클라우드 (Hot Keywords)
+              </h3>
+              <div class="tag-cloud" id="keyword-cloud">
+                <!-- Javascript will render tags here -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Global vs Korean Highlight Summaries -->
+          <div class="trends-grid">
+            <div class="glass-card">
+              <h3 class="highlight-section-title">
+                <i class="fa-solid fa-globe"></i> 글로벌 패션 트렌드 동향 (Global)
+              </h3>
+              <div id="global-trends-list">
+                <!-- Seeded global list goes here -->
+              </div>
+            </div>
+            
+            <div class="glass-card">
+              <h3 class="highlight-section-title">
+                <i class="fa-solid fa-map-location-dot"></i> 한국 패션 트렌드 동향 (K-Fashion)
+              </h3>
+              <div id="korean-trends-list">
+                <!-- Seeded korean list goes here -->
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==========================================
+             TAB 2: PLATFORM PULSE
+             ========================================== -->
+        <section id="tab-platforms" class="tab-pane">
+          <div class="glass-card">
+            <!-- Platform Sub Navigation Bar -->
+            <div class="platform-tabs" id="platform-tabs-bar">
+              <button class="platform-btn active" data-platform="vogue">Vogue</button>
+              <button class="platform-btn" data-platform="wwd">WWD</button>
+              <button class="platform-btn" data-platform="fashionSnoops">Fashion Snoops</button>
+              <button class="platform-btn" data-platform="instagram">Instagram</button>
+              <button class="platform-btn" data-platform="youtube">YouTube</button>
+              <button class="platform-btn" data-platform="twitter">Twitter (X)</button>
+              <button class="platform-btn" data-platform="netflix">Netflix</button>
+            </div>
+
+            <!-- Platform View Window -->
+            <div class="platform-view-window">
+              <!-- Vogue Panel -->
+              <div class="platform-card-content active" id="p-vogue">
+                <div class="platform-intro">
+                  <div class="platform-header-row">
+                    <h3 id="p-vogue-title">Vogue Magazine</h3>
+                    <span class="platform-reliability-badge" id="p-vogue-rel">신뢰도: 상</span>
+                  </div>
+                  <p class="platform-desc-box" id="p-vogue-desc">런웨이 및 하이패션 하우스 트렌드 전문 분석가 의견 로딩 중...</p>
+                </div>
+                <div class="editorial-grid" id="p-vogue-feed">
+                  <!-- Articles list -->
+                </div>
+              </div>
+
+              <!-- WWD Panel -->
+              <div class="platform-card-content" id="p-wwd">
+                <div class="platform-intro">
+                  <div class="platform-header-row">
+                    <h3>WWD (Women's Wear Daily)</h3>
+                    <span class="platform-reliability-badge">신뢰도: 최상</span>
+                  </div>
+                  <p class="platform-desc-box" id="p-wwd-desc">패션 시장 경제, 유통 수량 및 비즈니스 데이터 요약 로딩 중...</p>
+                </div>
+                <div class="editorial-grid" id="p-wwd-feed">
+                  <!-- WWD articles -->
+                </div>
+              </div>
+
+              <!-- Fashion Snoops Panel -->
+              <div class="platform-card-content" id="p-fashionSnoops">
+                <div class="platform-intro">
+                  <div class="platform-header-row">
+                    <h3>Fashion Snoops</h3>
+                    <span class="platform-reliability-badge">신뢰도: 상</span>
+                  </div>
+                  <p class="platform-desc-box" id="p-fs-desc">소재, 실루엣, 디테일 장기 트렌드 예측 키워드 요약 로딩 중...</p>
+                </div>
+                <div class="editorial-grid" id="p-fs-feed">
+                  <!-- Forecast articles -->
+                </div>
+              </div>
+
+              <!-- Instagram Panel -->
+              <div class="platform-card-content" id="p-instagram">
+                <div class="platform-intro">
+                  <div class="platform-header-row">
+                    <h3>Instagram Insights</h3>
+                    <span class="platform-reliability-badge">신뢰도: 보통</span>
+                  </div>
+                  <p class="platform-desc-box" id="p-insta-desc">인플루언서 피드, 소수 바이럴 비주얼 키워드 분석 로딩 중...</p>
+                </div>
+                <div class="instagram-grid" id="p-insta-feed">
+                  <!-- Instagram posts -->
+                </div>
+              </div>
+
+              <!-- YouTube Panel -->
+              <div class="platform-card-content" id="p-youtube">
+                <div class="platform-intro">
+                  <div class="platform-header-row">
+                    <h3>YouTube Video Trends</h3>
+                    <span class="platform-reliability-badge">신뢰도: 보통</span>
+                  </div>
+                  <p class="platform-desc-box" id="p-yt-desc">룩북 및 아이돌 메이크/패션 해체 영상 추이 데이터 로딩 중...</p>
+                </div>
+                <div class="youtube-grid" id="p-yt-feed">
+                  <!-- YouTube videos -->
+                </div>
+              </div>
+
+              <!-- Twitter Panel -->
+              <div class="platform-card-content" id="p-twitter">
+                <div class="platform-intro">
+                  <div class="platform-header-row">
+                    <h3>Twitter (X) Realtime Buzz</h3>
+                    <span class="platform-reliability-badge">신뢰도: 보통-하</span>
+                  </div>
+                  <p class="platform-desc-box" id="p-tw-desc">K-Pop 실시간 언급량, 공항패션 반응 지수 로딩 중...</p>
+                </div>
+                <table class="twitter-table">
+                  <thead>
+                    <tr>
+                      <th>순위 / 해시태그</th>
+                      <th>멘션 수</th>
+                      <th>감성 반응</th>
+                    </tr>
+                  </thead>
+                  <tbody id="p-tw-feed">
+                    <!-- Twitter table lines -->
+                  </tbody>
+                </table>
+              </div>
+
+              <!-- Netflix Panel -->
+              <div class="platform-card-content" id="p-netflix">
+                <div class="platform-intro">
+                  <div class="platform-header-row">
+                    <h3>Netflix Show & Character Costume Impact</h3>
+                    <span class="platform-reliability-badge">신뢰도: 보통-상</span>
+                  </div>
+                  <p class="platform-desc-box" id="p-net-desc">화제의 시리즈 주인공 착장 및 리테일 매칭 구매 유도 요약 로딩 중...</p>
+                </div>
+                <div class="netflix-row-grid" id="p-net-feed">
+                  <!-- Netflix elements -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==========================================
+             TAB 3: MATRIX & COMPARISON
+             ========================================== -->
+        <section id="tab-matrix" class="tab-pane">
+          <div class="glass-card">
+            <h3 class="highlight-section-title">
+              <i class="fa-solid fa-arrow-right-arrow-left"></i> 2026 글로벌 vs 한국 트렌드 요약 비교 매트릭스
+            </h3>
+            
+            <div class="matrix-container" style="margin-top: 25px;">
+              <!-- Global Column -->
+              <div class="matrix-column">
+                <h3 class="global-heading"><i class="fa-solid fa-earth-americas"></i> Global Focus</h3>
+                <div class="matrix-block" id="matrix-global-blocks">
+                  <!-- Rendered dynamically -->
+                </div>
+              </div>
+              
+              <!-- Korean Column -->
+              <div class="matrix-column korea-col">
+                <h3 class="korea-heading"><i class="fa-solid fa-wand-magic-sparkles"></i> Korean Focus (K-Fashion)</h3>
+                <div class="matrix-block" id="matrix-korea-blocks">
+                  <!-- Rendered dynamically -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==========================================
+             TAB 4: LIVE FEED (RSS SCRAPER)
+             ========================================== -->
+        <section id="tab-live" class="tab-pane">
+          <div class="glass-card">
+            <div class="live-feed-header">
+              <div>
+                <h3 class="highlight-section-title" style="margin-bottom: 5px;">
+                  <i class="fa-solid fa-rss"></i> 실시간 글로벌 패션 뉴스 파서
+                </h3>
+                <p style="font-size: 0.82rem; color: var(--text-secondary);">
+                  CORS 프록시를 경유하여 Vogue 및 WWD의 최신 RSS 채널을 직접 크롤링합니다.
+                </p>
+              </div>
+              
+              <div class="live-feed-controls">
+                <button class="btn-primary" id="btn-fetch-live">
+                  <i class="fa-solid fa-rotate"></i> 실시간 피드 갱신
+                </button>
+                <button class="btn-outline" id="btn-reset-feed">초기화</button>
+              </div>
+            </div>
+
+            <!-- Loader -->
+            <div class="feed-loader" id="live-feed-loader">
+              <div class="spinner"></div>
+              <div class="loader-text">CORS 프록시를 통해 최신 RSS 피드를 수집하는 중...</div>
+            </div>
+
+            <!-- RSS list -->
+            <div class="feed-list" id="live-feed-list">
+              <!-- Rendered items -->
+              <div style="text-align: center; padding: 40px; color: var(--text-muted); border: 1px dashed var(--border-color); border-radius: 8px;">
+                "실시간 피드 갱신" 버튼을 클릭하여 Vogue와 WWD의 최신 기사 피드를 수집해 보세요.
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==========================================
+             TAB 5: FORECAST SIMULATOR
+             ========================================== -->
+        <section id="tab-forecast" class="tab-pane">
+          <div class="forecast-tool-wrapper">
+            <div class="glass-card" style="margin-bottom: 25px;">
+              <div class="forecast-intro">
+                <h3><i class="fa-solid fa-wand-magic-sparkles" style="color: var(--accent-pink);"></i> Fashion Trend AI Simulator</h3>
+                <p>알고 싶거나 예측이 필요한 특정 패션 키워드를 입력해 보세요. 2026 트렌드 파라미터와의 연결 고리를 분석합니다.</p>
+              </div>
+
+              <div class="forecast-search-box">
+                <div class="search-input-wrapper">
+                  <i class="fa-solid fa-magnifying-glass"></i>
+                  <input type="text" class="forecast-input" id="forecast-input-query" placeholder="예: 몰텐 실버, 크롭 셋업, 니트 크로셰, 셔링, 테크 팬츠...">
+                </div>
+                <button class="btn-primary btn-forecast" id="btn-run-forecast">
+                  <i class="fa-solid fa-gears"></i> 트렌드 예측하기
+                </button>
+              </div>
+
+              <div class="forecast-suggestions">
+                <span class="suggestion-chip" data-query="몰텐 실버">#몰텐 실버 (K-Pop)</span>
+                <span class="suggestion-chip" data-query="대형 브로치">#대형 브로치 (글로벌)</span>
+                <span class="suggestion-chip" data-query="젠더리스 크롭 블레이저">#크롭 블레이저 (한국)</span>
+                <span class="suggestion-chip" data-query="벨벳 크로셰 니트">#크로셰 니트 (빈티지)</span>
+              </div>
+            </div>
+
+            <!-- Output section (Hidden by default) -->
+            <div class="glass-card forecast-results" id="forecast-results-panel">
+              <div class="forecast-results-header">
+                <h4><i class="fa-solid fa-square-poll-vertical" style="color: var(--accent-cyan);"></i> 시뮬레이션 예측 분석서</h4>
+                <div class="meta-badge" id="forecast-match-status">지표 분석 완료</div>
+              </div>
+
+              <div class="forecast-results-grid">
+                <div class="results-left">
+                  <div>
+                    <span class="metric-label" style="display:block; margin-bottom:5px;">종합 트렌드 스코어 (Score)</span>
+                    <div class="score-progress-wrapper">
+                      <div class="score-header-row">
+                        <span>종합 화제성</span>
+                        <strong id="result-score-val">88%</strong>
+                      </div>
+                      <div class="progress-track">
+                        <div class="progress-fill" id="result-score-progress"></div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <span class="metric-label">연결 타겟 플랫폼 적합도</span>
+                    <ul style="list-style: none; margin-top: 10px; font-size: 0.85rem; color: var(--text-secondary); display: flex; flex-direction:column; gap: 8px;" id="result-platform-match">
+                      <!-- Rendered fit metrics -->
+                    </ul>
+                  </div>
+                </div>
+
+                <div class="results-right">
+                  <div>
+                    <span class="metric-label">트렌드 스타일링 가이드</span>
+                    <div class="forecast-feedback-box" id="result-styling-guide" style="margin-top: 8px;">
+                      검색어 분석에 따른 스타일 매칭 방향성이 출력됩니다.
+                    </div>
+                  </div>
+
+                  <div>
+                    <span class="metric-label">권장 2026 컬러 팔레트</span>
+                    <div class="forecast-swatches" id="result-color-swatches">
+                      <!-- Color swatches -->
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- Detail Popup Modal -->
+  <div class="modal-overlay" id="detail-modal">
+    <div class="modal-content">
+      <button class="modal-close" id="btn-close-modal"><i class="fa-solid fa-xmark"></i></button>
+      <h3 class="modal-title" id="modal-title-field">트렌드 상세 분석</h3>
+      <div class="modal-body" id="modal-body-field">
+        상세 분석 데이터가 여기에 표시됩니다.
+      </div>
+    </div>
+  </div>
+
+  <!-- Load Trend Database -->
+  <script src="trends_seed.js"></script>
+  
+  <!-- UI & Application Logic Scripts -->
+  <script src="app.js"></script>
+</body>
+</html>
